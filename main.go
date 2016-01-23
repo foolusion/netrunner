@@ -57,13 +57,45 @@ func main() {
 			},
 		},
 	}
+	g.dispatch(corporationDraw{clickCost: 0, numCards: 5})
+	g.dispatch(runnerDraw{clickCost: 0, numCards: 5})
 	fmt.Println(g)
-	g.Dispatch(runnerTurn(4))
+	g.dispatch(runnerTurn(4))
 	fmt.Println(g)
 }
 
 type actioner interface {
 	action(*gameState) *gameState
+}
+
+type corporationDraw struct {
+	clickCost int
+	numCards  int
+}
+
+func (c corporationDraw) action(g *gameState) *gameState {
+	g.clicks -= c.clickCost
+	for i := 0; i < c.numCards; i++ {
+		var c string
+		c, g.corporationState.deck = g.corporationState.deck[0], g.corporationState.deck[1:]
+		g.corporationState.hand = append(g.corporationState.hand, c)
+	}
+	return g
+}
+
+type runnerDraw struct {
+	clickCost int
+	numCards  int
+}
+
+func (r runnerDraw) action(g *gameState) *gameState {
+	g.clicks -= r.clickCost
+	for i := 0; i < r.numCards; i++ {
+		var c string
+		c, g.runnerState.deck = g.runnerState.deck[0], g.runnerState.deck[1:]
+		g.runnerState.hand = append(g.runnerState.hand, c)
+	}
+	return g
 }
 
 type corporationTurn int
@@ -89,7 +121,7 @@ type gameState struct {
 	clicks int
 }
 
-func (g *gameState) Dispatch(a actioner) {
+func (g *gameState) dispatch(a actioner) {
 	g = a.action(g)
 }
 

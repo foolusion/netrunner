@@ -8,7 +8,7 @@ type corporationDraw struct {
 func (c corporationDraw) action(g *gameState) *gameState {
 	g.clicks -= c.clickCost
 	for i := 0; i < c.numCards; i++ {
-		var c string
+		var c card
 		c, g.corporationState.deck = g.corporationState.deck[0], g.corporationState.deck[1:]
 		g.corporationState.hand = append(g.corporationState.hand, c)
 	}
@@ -27,7 +27,7 @@ func (ccc corporationClickCredit) action(g *gameState) *gameState {
 }
 
 type corporationInstallNewRemote struct {
-	card string
+	card
 }
 
 func (c corporationInstallNewRemote) action(g *gameState) *gameState {
@@ -37,7 +37,7 @@ func (c corporationInstallNewRemote) action(g *gameState) *gameState {
 			break
 		}
 	}
-	g.corporationState.servers = append(g.corporationState.servers, server{t: "remote", ice: []string{}, root: []string{c.card}})
+	g.corporationState.servers = append(g.corporationState.servers, server{t: "remote", ice: []serverCard{}, root: []serverCard{{card: c.card}}})
 	g.clicks--
 	return g
 }

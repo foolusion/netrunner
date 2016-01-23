@@ -8,7 +8,7 @@ func main() {
 		clicks: 3,
 		corporationState: corporationState{
 			identity: "jinteki: personal evolution",
-			deck: []string{
+			deck: []card{
 				"Nisei MK II",
 				"Project Junebug",
 				"Snare!",
@@ -33,24 +33,24 @@ func main() {
 			servers: []server{
 				{
 					t:    "R&D",
-					root: []string{},
-					ice:  []string{},
+					root: []serverCard{},
+					ice:  []serverCard{},
 				},
 				{
 					t:    "Archives",
-					root: []string{},
-					ice:  []string{},
+					root: []serverCard{},
+					ice:  []serverCard{},
 				},
 				{
 					t:    "HQ",
-					root: []string{},
-					ice:  []string{},
+					root: []serverCard{},
+					ice:  []serverCard{},
 				},
 			},
 		},
 		runnerState: runnerState{
 			identity: "Gabriel Santiago: Consummmate Professional",
-			deck: []string{
+			deck: []card{
 				"Account Siphon",
 				"Easy Mark",
 				"Forged Activation Orders",
@@ -105,30 +105,39 @@ type gameState struct {
 	clicks int
 }
 
+type card string
+
 func (g *gameState) dispatch(a actioner) {
 	g = a.action(g)
 }
 
+type serverCard struct {
+	rezzed            bool
+	advancementTokens int
+	virusCounters     int
+	card
+}
+
 type server struct {
 	t    string
-	ice  []string
-	root []string
+	ice  []serverCard
+	root []serverCard
 }
 
 type corporationState struct {
 	identity string
 	credits  int
-	deck     []string
-	hand     []string
+	deck     []card
+	hand     []card
 	servers  []server
 }
 
 type runnerState struct {
 	identity  string
 	credits   int
-	deck      []string
-	hand      []string
-	programs  []string
-	hardware  []string
-	resources []string
+	deck      []card
+	hand      []card
+	programs  []card
+	hardware  []card
+	resources []card
 }

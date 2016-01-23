@@ -27,17 +27,13 @@ func (ccc corporationClickCredit) action(g *game) *game {
 }
 
 type corporationInstallNewRemote struct {
-	card
+	handIndex int
 }
 
 func (c corporationInstallNewRemote) action(g *game) *game {
-	for i, v := range g.corporation.hand {
-		if v == c.card {
-			g.corporation.hand[i], g.corporation.hand = g.corporation.hand[len(g.corporation.hand)-1], g.corporation.hand[:len(g.corporation.hand)-1]
-			break
-		}
-	}
-	g.corporation.servers = append(g.corporation.servers, server{t: "remote", ice: []serverCard{}, root: []serverCard{{card: c.card}}})
+	card := g.corporation.hand[c.handIndex]
+	g.corporation.hand[c.handIndex], g.corporation.hand = g.corporation.hand[len(g.corporation.hand)-1], g.corporation.hand[:len(g.corporation.hand)-1]
+	g.corporation.servers = append(g.corporation.servers, server{t: "remote", ice: []serverCard{}, root: []serverCard{{card: card}}})
 	g.clicks--
 	return g
 }

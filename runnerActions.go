@@ -8,7 +8,7 @@ type runnerDraw struct {
 func (r runnerDraw) action(g *game) *game {
 	g.clicks -= r.clickCost
 	for i := 0; i < r.numCards; i++ {
-		var c card
+		var c string
 		c, g.runner.deck = g.runner.deck[0], g.runner.deck[1:]
 		g.runner.hand = append(g.runner.hand, c)
 	}

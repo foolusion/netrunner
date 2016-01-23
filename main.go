@@ -7,28 +7,28 @@ func main() {
 		turn:   "corporation",
 		clicks: 3,
 		corporation: corporation{
-			identity: "jinteki: personal evolution",
+			identity: cardJintekiPersonalEvolution,
 			deck: []card{
-				"Nisei MK II",
-				"Project Junebug",
-				"Snare!",
-				"Zaibatsu Loyalty",
-				"Neural EMP",
-				"Precognition",
-				"Cell Portal",
-				"Chum",
-				"Data Mine",
-				"Neural Katana",
-				"Wall of Thorns",
-				"Akiro Watanabe",
-				"Priority Requisition",
-				"Private Security Force",
-				"Melange Mining Corp.",
-				"PAD Campaign",
-				"Hedge Fund",
-				"Enigma",
-				"Hunter",
-				"Wall of Static",
+				cardNiseiMKII,
+				cardProjectJunebug,
+				cardSnare,
+				cardZaibatsuLoyalty,
+				cardNeuralEMP,
+				cardPrecognition,
+				cardCellPortal,
+				cardChum,
+				cardDataMine,
+				cardNeuralKatana,
+				cardWallOfThorns,
+				cardAkitaroWatanabe,
+				cardPriorityRequisition,
+				cardPrivateSecurityForce,
+				cardMelangeMiningCorp,
+				cardPADCampaign,
+				cardHedgeFund,
+				cardEnigma,
+				cardHunter,
+				cardWallOfStatic,
 			},
 			servers: []server{
 				{
@@ -50,7 +50,7 @@ func main() {
 		},
 		runner: runner{
 			identity: "Gabriel Santiago: Consummmate Professional",
-			deck: []card{
+			deck: []string{
 				"Account Siphon",
 				"Easy Mark",
 				"Forged Activation Orders",
@@ -77,7 +77,7 @@ func main() {
 	g.dispatch(corporationDraw{clickCost: 0, numCards: 5})
 	g.dispatch(runnerDraw{clickCost: 0, numCards: 5})
 	g.dispatch(gainCredits{corporation: 5, runner: 5})
-	g.dispatch(corporationInstallNewRemote{card: "Nisei MK II"})
+	g.dispatch(corporationInstallNewRemote{handIndex: 0})
 	g.dispatch(corporationAdvanceCard{serverIndex: 3, location: "root", locationIndex: 0})
 	g.dispatch(corporationAdvanceCard{serverIndex: 3, location: "root", locationIndex: 0})
 	fmt.Println(g)
@@ -107,8 +107,6 @@ type game struct {
 	clicks int
 }
 
-type card string
-
 func (g *game) dispatch(a actioner) {
 	g = a.action(g)
 }
@@ -127,7 +125,7 @@ type server struct {
 }
 
 type corporation struct {
-	identity string
+	identity card
 	credits  int
 	deck     []card
 	hand     []card
@@ -137,9 +135,9 @@ type corporation struct {
 type runner struct {
 	identity  string
 	credits   int
-	deck      []card
-	hand      []card
-	programs  []card
-	hardware  []card
-	resources []card
+	deck      []string
+	hand      []string
+	programs  []string
+	hardware  []string
+	resources []string
 }

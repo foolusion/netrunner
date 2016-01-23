@@ -4,6 +4,8 @@ import "fmt"
 
 func main() {
 	g := &gameState{
+		turn:   "corporation",
+		clicks: 3,
 		corporationState: corporationState{
 			identity: "jinteki: personal evolution",
 			deck: []string{
@@ -56,11 +58,39 @@ func main() {
 		},
 	}
 	fmt.Println(g)
+	g.Dispatch(runnerTurn(4))
+	fmt.Println(g)
+}
+
+type actioner interface {
+	action(*gameState) *gameState
+}
+
+type corporationTurn int
+
+func (c corporationTurn) action(g *gameState) *gameState {
+	g.turn = "corporation"
+	g.clicks = int(c)
+	return g
+}
+
+type runnerTurn int
+
+func (r runnerTurn) action(g *gameState) *gameState {
+	g.turn = "runner"
+	g.clicks = int(r)
+	return g
 }
 
 type gameState struct {
 	corporationState
 	runnerState
+	turn   string
+	clicks int
+}
+
+func (g *gameState) Dispatch(a actioner) {
+	g = a.action(g)
 }
 
 type server struct {

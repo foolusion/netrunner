@@ -3,10 +3,10 @@ package main
 import "fmt"
 
 func main() {
-	g := &gameState{
+	g := &game{
 		turn:   "corporation",
 		clicks: 3,
-		corporationState: corporationState{
+		corporation: corporation{
 			identity: "jinteki: personal evolution",
 			deck: []card{
 				"Nisei MK II",
@@ -48,7 +48,7 @@ func main() {
 				},
 			},
 		},
-		runnerState: runnerState{
+		runner: runner{
 			identity: "Gabriel Santiago: Consummmate Professional",
 			deck: []card{
 				"Account Siphon",
@@ -86,7 +86,7 @@ func main() {
 }
 
 type actioner interface {
-	action(*gameState) *gameState
+	action(*game) *game
 }
 
 type gainCredits struct {
@@ -94,22 +94,22 @@ type gainCredits struct {
 	runner      int
 }
 
-func (gc gainCredits) action(g *gameState) *gameState {
-	g.corporationState.credits += gc.corporation
-	g.runnerState.credits += gc.runner
+func (gc gainCredits) action(g *game) *game {
+	g.corporation.credits += gc.corporation
+	g.runner.credits += gc.runner
 	return g
 }
 
-type gameState struct {
-	corporationState
-	runnerState
+type game struct {
+	corporation
+	runner
 	turn   string
 	clicks int
 }
 
 type card string
 
-func (g *gameState) dispatch(a actioner) {
+func (g *game) dispatch(a actioner) {
 	g = a.action(g)
 }
 
@@ -126,7 +126,7 @@ type server struct {
 	root []serverCard
 }
 
-type corporationState struct {
+type corporation struct {
 	identity string
 	credits  int
 	deck     []card
@@ -134,7 +134,7 @@ type corporationState struct {
 	servers  []server
 }
 
-type runnerState struct {
+type runner struct {
 	identity  string
 	credits   int
 	deck      []card

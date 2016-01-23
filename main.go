@@ -30,6 +30,23 @@ func main() {
 				"Hunter",
 				"Wall of Static",
 			},
+			servers: []server{
+				{
+					t:    "R&D",
+					root: []string{},
+					ice:  []string{},
+				},
+				{
+					t:    "Archives",
+					root: []string{},
+					ice:  []string{},
+				},
+				{
+					t:    "HQ",
+					root: []string{},
+					ice:  []string{},
+				},
+			},
 		},
 		runnerState: runnerState{
 			identity: "Gabriel Santiago: Consummmate Professional",
@@ -59,6 +76,8 @@ func main() {
 	}
 	g.dispatch(corporationDraw{clickCost: 0, numCards: 5})
 	g.dispatch(runnerDraw{clickCost: 0, numCards: 5})
+	g.dispatch(gainCredits{corporation: 5, runner: 5})
+	g.dispatch(corporationInstallNewRemote{card: "Nisei MK II"})
 	fmt.Println(g)
 	g.dispatch(runnerTurn(4))
 	fmt.Println(g)
@@ -68,49 +87,14 @@ type actioner interface {
 	action(*gameState) *gameState
 }
 
-type corporationDraw struct {
-	clickCost int
-	numCards  int
+type gainCredits struct {
+	corporation int
+	runner      int
 }
 
-func (c corporationDraw) action(g *gameState) *gameState {
-	g.clicks -= c.clickCost
-	for i := 0; i < c.numCards; i++ {
-		var c string
-		c, g.corporationState.deck = g.corporationState.deck[0], g.corporationState.deck[1:]
-		g.corporationState.hand = append(g.corporationState.hand, c)
-	}
-	return g
-}
-
-type runnerDraw struct {
-	clickCost int
-	numCards  int
-}
-
-func (r runnerDraw) action(g *gameState) *gameState {
-	g.clicks -= r.clickCost
-	for i := 0; i < r.numCards; i++ {
-		var c string
-		c, g.runnerState.deck = g.runnerState.deck[0], g.runnerState.deck[1:]
-		g.runnerState.hand = append(g.runnerState.hand, c)
-	}
-	return g
-}
-
-type corporationTurn int
-
-func (c corporationTurn) action(g *gameState) *gameState {
-	g.turn = "corporation"
-	g.clicks = int(c)
-	return g
-}
-
-type runnerTurn int
-
-func (r runnerTurn) action(g *gameState) *gameState {
-	g.turn = "runner"
-	g.clicks = int(r)
+func (gc gainCredits) action(g *gameState) *gameState {
+	g.corporationState.credits += gc.corporation
+	g.runnerState.credits += gc.runner
 	return g
 }
 
@@ -133,6 +117,7 @@ type server struct {
 
 type corporationState struct {
 	identity string
+	credits  int
 	deck     []string
 	hand     []string
 	servers  []server
@@ -140,6 +125,7 @@ type corporationState struct {
 
 type runnerState struct {
 	identity  string
+	credits   int
 	deck      []string
 	hand      []string
 	programs  []string

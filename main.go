@@ -78,6 +78,8 @@ func main() {
 	g.dispatch(runnerDraw{clickCost: 0, numCards: 5})
 	g.dispatch(gainCredits{corporation: 5, runner: 5})
 	g.dispatch(corporationInstallNewRemote{card: "Nisei MK II"})
+	g.dispatch(corporationAdvanceCard{serverIndex: 3, location: "root", locationIndex: 0})
+	g.dispatch(corporationAdvanceCard{serverIndex: 3, location: "root", locationIndex: 0})
 	fmt.Println(g)
 	g.dispatch(runnerTurn(4))
 	fmt.Println(g)

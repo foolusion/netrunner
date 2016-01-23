@@ -42,6 +42,24 @@ func (c corporationInstallNewRemote) action(g *gameState) *gameState {
 	return g
 }
 
+type corporationAdvanceCard struct {
+	serverIndex   int
+	location      string
+	locationIndex int
+}
+
+func (c corporationAdvanceCard) action(g *gameState) *gameState {
+	switch c.location {
+	case "root":
+		g.corporationState.servers[c.serverIndex].root[c.locationIndex].advancementTokens++
+	case "ice":
+		g.corporationState.servers[c.serverIndex].ice[c.locationIndex].advancementTokens++
+	}
+	g.clicks--
+	g.corporationState.credits--
+	return g
+}
+
 type corporationTurn int
 
 func (c corporationTurn) action(g *gameState) *gameState {

@@ -6,7 +6,7 @@ type runnerDraw struct {
 }
 
 func (r runnerDraw) action(g *game) *game {
-	g.clicks -= r.clickCost
+	g.runner.clicks -= r.clickCost
 	for i := 0; i < r.numCards; i++ {
 		var c string
 		c, g.runner.deck = g.runner.deck[0], g.runner.deck[1:]
@@ -21,7 +21,7 @@ type runnerClickCredit struct {
 }
 
 func (rcc runnerClickCredit) action(g *game) *game {
-	g.clicks -= rcc.click
+	g.runner.clicks -= rcc.click
 	g.dispatch(gainCredits{runner: rcc.credit})
 	return g
 }
@@ -29,7 +29,7 @@ func (rcc runnerClickCredit) action(g *game) *game {
 type runnerTurn int
 
 func (r runnerTurn) action(g *game) *game {
-	g.turn = "runner"
-	g.clicks = int(r)
+	g.turnPhase = "runner-1.1"
+	g.runner.clicks = int(r)
 	return g
 }

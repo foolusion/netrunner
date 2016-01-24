@@ -4,10 +4,10 @@ import "fmt"
 
 func main() {
 	g := &game{
-		turn:   "corporation",
-		clicks: 3,
+		turnPhase: "corporation-1.1",
 		corporation: corporation{
 			identity: cardJintekiPersonalEvolution,
+			clicks:   3,
 			deck: []card{
 				cardNiseiMKII,
 				cardProjectJunebug,
@@ -100,11 +100,24 @@ func (gc gainCredits) action(g *game) *game {
 	return g
 }
 
+type corpTurnBegin struct{}
+
+func (c corpTurnBegin) action(g *game) *game {
+	g.turnPhase = "corporation-1.2"
+	return g
+}
+
+type runnerTurnBegin struct{}
+
+func (r runnerTurnBegin) action(g *game) *game {
+	g.turnPhase = "runner-1.2"
+	return g
+}
+
 type game struct {
 	corporation
 	runner
-	turn   string
-	clicks int
+	turnPhase string
 }
 
 func (g *game) dispatch(a actioner) {
@@ -126,6 +139,7 @@ type server struct {
 
 type corporation struct {
 	identity card
+	clicks   int
 	credits  int
 	deck     []card
 	hand     []card
@@ -134,6 +148,7 @@ type corporation struct {
 
 type runner struct {
 	identity  string
+	clicks    int
 	credits   int
 	deck      []string
 	hand      []string

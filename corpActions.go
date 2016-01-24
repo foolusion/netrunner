@@ -6,7 +6,7 @@ type corporationDraw struct {
 }
 
 func (c corporationDraw) action(g *game) *game {
-	g.clicks -= c.clickCost
+	g.corporation.clicks -= c.clickCost
 	for i := 0; i < c.numCards; i++ {
 		var c card
 		c, g.corporation.deck = g.corporation.deck[0], g.corporation.deck[1:]
@@ -21,7 +21,7 @@ type corporationClickCredit struct {
 }
 
 func (ccc corporationClickCredit) action(g *game) *game {
-	g.clicks -= ccc.click
+	g.corporation.clicks -= ccc.click
 	g.dispatch(gainCredits{corporation: ccc.credit})
 	return g
 }
@@ -34,7 +34,7 @@ func (c corporationInstallNewRemote) action(g *game) *game {
 	card := g.corporation.hand[c.handIndex]
 	g.corporation.hand[c.handIndex], g.corporation.hand = g.corporation.hand[len(g.corporation.hand)-1], g.corporation.hand[:len(g.corporation.hand)-1]
 	g.corporation.servers = append(g.corporation.servers, server{t: "remote", ice: []serverCard{}, root: []serverCard{{card: card}}})
-	g.clicks--
+	g.corporation.clicks--
 	return g
 }
 
@@ -51,7 +51,7 @@ func (c corporationAdvanceCard) action(g *game) *game {
 	case "ice":
 		g.corporation.servers[c.serverIndex].ice[c.locationIndex].advancementTokens++
 	}
-	g.clicks--
+	g.corporation.clicks--
 	g.corporation.credits--
 	return g
 }
@@ -59,7 +59,7 @@ func (c corporationAdvanceCard) action(g *game) *game {
 type corporationTurn int
 
 func (c corporationTurn) action(g *game) *game {
-	g.turn = "corporation"
-	g.clicks = int(c)
+	g.turnPhase = "corporation-1.1"
+	g.corporation.clicks = int(c)
 	return g
 }
